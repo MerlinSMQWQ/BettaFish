@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from .agents import AdvisorAgent, AnalystAgent, ResearcherAgent
 from .config import get_config
 from .llm_client import EmploymentLLMClient
@@ -21,12 +23,60 @@ class EmploymentAdvisor:
         self.analyst = AnalystAgent(self.llm_client)
         self.advisor = AdvisorAgent(self.llm_client)
 
-    def analyze(self, request: EmploymentRequest) -> EmploymentReport:
+    def analyze(
+        self,
+        request: EmploymentRequest,
+        progress_callback: Callable[[str, str, int, dict[str, object] | None], None] | None = None,
+    ) -> EmploymentReport:
+        self._emit_progress(progress_callback, "init", "正在初始化就业分析流程", 5)
         mode = self._resolve_mode(request)
-        search_results = self.search_agency.search(request, mode)
+        self._emit_progress(
+            progress_callback,
+            "mode",
+            f"已确定分析模式: {mode}",
+            10,
+            {"mode": mode},
+        )
+        search_plan = self.search_agency.build_search_plan(request, mode)
+        self._emit_progress(
+            progress_callback,
+            "search_plan",
+            f"已生成 {len(search_plan.queries)} 条检索查询",
+            20,
+            {"queries": search_plan.queries, "tool_name": search_plan.tool_name},
+        )
+        search_results = self.search_agency.search(request, mode, progress_callback=progress_callback)
+        self._emit_progress(
+            progress_callback,
+            "search_done",
+            f"信息检索完成，获得 {len(search_results)} 条证据",
+            40,
+            {"results_count": len(search_results)},
+        )
         researcher_note, researcher_used_llm = self.researcher.run(request, mode, search_results)
+        self._emit_progress(
+            progress_callback,
+            "researcher_done",
+            "Researcher 已完成检索整理",
+            58,
+            {"used_llm": researcher_used_llm},
+        )
         analyst_note, analyst_used_llm = self.analyst.run(request, mode, researcher_note, search_results)
+        self._emit_progress(
+            progress_callback,
+            "analyst_done",
+            "Analyst 已完成结构化分析",
+            76,
+            {"used_llm": analyst_used_llm},
+        )
         markdown, advisor_used_llm = self.advisor.run(request, mode, researcher_note, analyst_note, search_results)
+        self._emit_progress(
+            progress_callback,
+            "advisor_done",
+            "Advisor 已完成最终报告生成",
+            92,
+            {"used_llm": advisor_used_llm},
+        )
 
         title = self._build_title(request, mode)
         output_path = save_markdown(self.config.report_dir, request.query, markdown) if request.save else None
@@ -34,7 +84,7 @@ class EmploymentAdvisor:
             AgentNote(role="researcher", content=researcher_note),
             AgentNote(role="analyst", content=analyst_note),
         ]
-        return EmploymentReport(
+        report = EmploymentReport(
             title=title,
             mode=mode,
             markdown=markdown,
@@ -44,6 +94,14 @@ class EmploymentAdvisor:
             agent_notes=agent_notes,
             output_path=output_path,
         )
+        self._emit_progress(
+            progress_callback,
+            "done",
+            "分析完成",
+            100,
+            {"output_path": output_path, "title": title},
+        )
+        return report
 
     def _resolve_mode(self, request: EmploymentRequest) -> str:
         if request.mode in {"market", "guidance"}:
@@ -58,3 +116,14 @@ class EmploymentAdvisor:
     def _build_title(self, request: EmploymentRequest, mode: str) -> str:
         suffix = "就业指导报告" if mode == "guidance" else "就业行情分析报告"
         return f"{request.query} - {suffix}"
+
+    def _emit_progress(
+        self,
+        callback: Callable[[str, str, int, dict[str, object] | None], None] | None,
+        stage: str,
+        message: str,
+        progress: int,
+        meta: dict[str, object] | None = None,
+    ) -> None:
+        if callback is not None:
+            callback(stage, message, progress, meta)

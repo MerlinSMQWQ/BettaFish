@@ -10,6 +10,10 @@ class EmploymentRequest:
     mode: str = "auto"
     profile: dict[str, Any] = field(default_factory=dict)
     save: bool = True
+    use_offerstar: bool = False
+    offerstar_page_from: int = 1
+    offerstar_page_to: int = 1
+    offerstar_max_items: int = 20
 
 
 @dataclass(slots=True)
