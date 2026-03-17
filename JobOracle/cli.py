@@ -12,7 +12,7 @@ from .service import EmploymentAdvisor
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Minimal employment market analysis and guidance tool")
+    parser = argparse.ArgumentParser(description="JobOracle employment market analysis and guidance tool")
     parser.add_argument("query", nargs="?", help="Employment question to analyze")
     parser.add_argument(
         "--mode",
@@ -95,7 +95,7 @@ def _render_progress_bar(progress: int, width: int = 24) -> str:
 
 def _print_header(query: str, mode: str, has_profile: bool, save: bool, use_offerstar: bool) -> None:
     _print_divider("=")
-    print("Emplyment CLI")
+    print("JobOracle CLI")
     _print_divider("=")
     print(f"[{_now()}] 问题: {query}")
     print(f"[{_now()}] 模式: {mode}")

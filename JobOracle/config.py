@@ -34,7 +34,7 @@ class EmploymentConfig:
         or "gpt-4o-mini"
     )
     timeout_seconds: int = int(os.getenv("EMPLOYMENT_TIMEOUT_SECONDS", "120"))
-    report_dir: Path = Path(os.getenv("EMPLOYMENT_REPORT_DIR", PROJECT_ROOT / "Emplyment" / "reports"))
+    report_dir: Path = Path(os.getenv("EMPLOYMENT_REPORT_DIR", PROJECT_ROOT / "JobOracle" / "reports"))
     search_api_key: str = os.getenv("EMPLOYMENT_SEARCH_API_KEY") or os.getenv("TAVILY_API_KEY") or ""
     search_provider: str = os.getenv("EMPLOYMENT_SEARCH_PROVIDER", "tavily").lower()
     search_timeout_seconds: int = int(os.getenv("EMPLOYMENT_SEARCH_TIMEOUT_SECONDS", "30"))

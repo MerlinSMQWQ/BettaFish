@@ -51,7 +51,7 @@ class OfferStarQuery:
     max_items: int = 20
     timeout_seconds: int = 20
     target_rows_per_10s: int = 20
-    output_dir: Path = Path("Emplyment/jobs_dataset")
+    output_dir: Path = Path("JobOracle/jobs_dataset")
 
 
 class OfferStarCrawler:
@@ -294,7 +294,7 @@ class OfferStarCrawler:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Conservative OfferStar crawler for Emplyment")
+    parser = argparse.ArgumentParser(description="Conservative OfferStar crawler for JobOracle")
     parser.add_argument("--question", default="", help="Natural language question used to infer filters")
     parser.add_argument("--industry", default="", help="Industry filter")
     parser.add_argument("--work-location", default="", help="Work location filter")
@@ -305,7 +305,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-items", type=int, default=20, help="Maximum number of rows to keep")
     parser.add_argument("--timeout", type=int, default=20, help="Request timeout in seconds")
     parser.add_argument("--target-rows-per-10s", type=int, default=20, help="Throttle target, lower means slower")
-    parser.add_argument("--output-dir", default="Emplyment/jobs_dataset", help="Directory to store CSV/JSON snapshots")
+    parser.add_argument("--output-dir", default="JobOracle/jobs_dataset", help="Directory to store CSV/JSON snapshots")
     return parser
 
 

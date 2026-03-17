@@ -147,6 +147,8 @@ cython_debug/
 # macOS
 .DS_Store
 */.DS_Store
+JobOracle/reports/
+JobOracle/jobs_dataset/
 
 # Windows
 Thumbs.db

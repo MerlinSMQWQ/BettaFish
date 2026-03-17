@@ -1,6 +1,6 @@
-# Emplyment
+# JobOracle
 
-`Emplyment/` 是一个和主项目解耦的最小就业分析工具。
+`JobOracle/` 是一个和主项目解耦的轻量就业分析工具。
 
 它刻意不复用 BettaFish 那套较重的前后端、任务流、SSE、报告引擎，只保留一个最短闭环：
 
@@ -9,7 +9,7 @@
 - 先做信息检索
 - 再走轻量三角色协作
 - 最后生成一份 Markdown 报告
-- 默认保存到 `Emplyment/reports/`
+- 默认保存到 `JobOracle/reports/`
 
 ## 当前内部流程
 
@@ -53,7 +53,7 @@
 在项目根目录运行：
 
 ```bash
-python -m Emplyment.cli "2026 年杭州算法岗就业行情如何"
+python -m JobOracle.cli "2026 年杭州算法岗就业行情如何"
 ```
 
 默认 CLI 会显示运行中间过程，包括：
@@ -67,13 +67,13 @@ python -m Emplyment.cli "2026 年杭州算法岗就业行情如何"
 求职指导示例：
 
 ```bash
-python -m Emplyment.cli "我是统计学本科，想去深圳找数据分析工作，应该怎么准备" --mode guidance
+python -m JobOracle.cli "我是统计学本科，想去深圳找数据分析工作，应该怎么准备" --mode guidance
 ```
 
 如果希望在分析时顺带调用 OfferStar 公开岗位汇总数据：
 
 ```bash
-python -m Emplyment.cli "我是武汉大学计算机毕业生，当前准备在武汉找工作，有什么建议吗" \
+python -m JobOracle.cli "我是武汉大学计算机毕业生，当前准备在武汉找工作，有什么建议吗" \
   --mode guidance \
   --use-offerstar \
   --offerstar-from-page 1 \
@@ -83,12 +83,12 @@ python -m Emplyment.cli "我是武汉大学计算机毕业生，当前准备在�
 
 当你在主分析流程里开启 `--use-offerstar` 时，抓到的岗位快照也会自动保存到：
 
-- `Emplyment/jobs_dataset/`
+- `JobOracle/jobs_dataset/`
 
 带用户画像：
 
 ```bash
-python -m Emplyment.cli "我适合投什么数据岗位" \
+python -m JobOracle.cli "我适合投什么数据岗位" \
   --mode guidance \
   --profile-json '{"education":"统计学本科","internship":"电商运营实习","skills":["Python","SQL","Tableau"]}'
 ```
@@ -96,13 +96,13 @@ python -m Emplyment.cli "我适合投什么数据岗位" \
 如果你只想保留最终输出，不看中间进度：
 
 ```bash
-python -m Emplyment.cli "2026 年杭州算法岗就业行情如何" --quiet
+python -m JobOracle.cli "2026 年杭州算法岗就业行情如何" --quiet
 ```
 
 抓取 OfferStar 公开岗位汇总页：
 
 ```bash
-python -m Emplyment.cli crawl-offerstar \
+python -m JobOracle.cli crawl-offerstar \
   --question "深圳 算法岗 华为 人工智能" \
   --from-page 1 \
   --to-page 5 \
@@ -112,7 +112,7 @@ python -m Emplyment.cli crawl-offerstar \
 也可以手动指定筛选项：
 
 ```bash
-python -m Emplyment.cli crawl-offerstar \
+python -m JobOracle.cli crawl-offerstar \
   --industry "人工智能" \
   --work-location "深圳" \
   --company "华为" \
@@ -172,7 +172,7 @@ python -m Emplyment.cli crawl-offerstar \
 
 默认输出目录：
 
-- `Emplyment/jobs_dataset/`
+- `JobOracle/jobs_dataset/`
 
 ## 没有 API 也能运行吗
 
