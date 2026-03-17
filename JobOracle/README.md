@@ -124,7 +124,11 @@ python -m JobOracle.cli crawl-offerstar \
 
 ## 配置方式
 
-会自动读取项目根目录 `.env`。
+默认会读取项目根目录 `.env`。
+
+如果把 `JobOracle` 单独拆出去，建议直接使用：
+
+- [JobOracle/.env.example](JobOracle/.env.example)
 
 优先读取这些变量：
 
@@ -154,6 +158,18 @@ python -m JobOracle.cli crawl-offerstar \
 - `EMPLOYMENT_SEARCH_PROVIDER`
 - `EMPLOYMENT_MAX_SEARCH_RESULTS`
 - `EMPLOYMENT_SEARCH_TIMEOUT_SECONDS`
+
+## 依赖安装
+
+最小依赖写在：
+
+- [JobOracle/requirements.txt](JobOracle/requirements.txt)
+
+安装方式：
+
+```bash
+pip install -r JobOracle/requirements.txt
+```
 
 ## OfferStar 低频采集说明
 
